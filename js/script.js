@@ -1,41 +1,37 @@
-console.log("hgfh");
+console.log("hgfh"); // Affiche un message dans la console pour vérifier que le script est chargé
 
-const addBtn = document.querySelector('#btn');
-const taskCard = document.querySelector(".todoCard");
-const tasksContainer = document.querySelector("#todoCards");
+const addBtn = document.querySelector('#btn'); // Sélectionne le bouton "Add a task"
+const taskCard = document.querySelector(".todoCard"); // Sélectionne un modèle de carte de tâche
+const tasksContainer = document.querySelector("#todoCards"); // Sélectionne le conteneur où les tâches seront ajoutées
 
-addBtn.addEventListener('click', addTask); // add a task on click
+// Ajoute un écouteur d'événement au bouton pour ajouter une nouvelle tâche lorsqu'il est cliqué
+addBtn.addEventListener('click', addTask);
 
 function addTask() {
-  const newTask = taskCard.cloneNode(true);
+  const newTask = taskCard.cloneNode(true); // Clone le modèle de carte de tâche
   const newTexArea = newTask.querySelector(".task");
-  newTexArea.value = "New Task" // set new task text to "New Task"
+  newTexArea.value = "New Task"; // Définit le texte de la nouvelle tâche à "New Task"
 
-  tasksContainer.appendChild(newTask); // aprend new task to the tasks container
+  const newDelBtn = newTask.querySelector('.delBtn');
+  if (newDelBtn) { // Vérifie si le bouton de suppression existe
+    // Ajoute un écouteur d'événement au bouton de suppression pour supprimer la tâche correspondante
+    newDelBtn.addEventListener('click', function() {
+      deleteTask(newTask); // Cible la bonne tâche à supprimer
+    });
+  } else {
+    console.error("Delete button not found in the new task card."); // Affiche une erreur si le bouton de suppression n'est pas trouvé
+  }
+
+  tasksContainer.appendChild(newTask); // Ajoute la nouvelle tâche au conteneur de tâches
+  updateCount(); // Met à jour le compteur de tâches
 }
 
-// On akoute un écouteur d'événement sur le bouton pour appeller une fonction suppression
-
-const delBtn = document.querySelector('.delBtn');
-delBtn.addEventListener('click', function() { // delete default task on click
-  deleteTask(taskCard); // target the right task
-});
-// On crée la fonction de suppression 
-function deleteTask(task){
-  task.remove(); // remove the task
+function deleteTask(task) {
+  task.remove(); // Supprime la tâche
+  updateCount(); // Met à jour le compteur de tâches
 }
 
-// On ajoute l'écouteur d'événement sur l'élément cloné dans la fonction ajout, afin de faire fonctionner le bouton supression sur les nouvelles cards 
-
-function addTask() {
-  const newTask = taskCard.cloneNode(true) // clone the task card 
-  const newDelBtn = newTask.querySelector('.dlBtn')
-  const newTexArea = newTask.querySelector('.task')
-  
-  newTexArea.value = "New Task" // set new task text to "New task"
-  newDelBtn.addEventListener('click', function() { // add delete event listenner to new task 
-    deleteTask(newTask); // append new task to the tasks container 
-  });
-  tasksContainer.appendChild(newTask) // append  new task to the task container
-  updateCount();
+function updateCount() {
+  const count = tasksContainer.querySelectorAll('.todoCard').length; // Compte le nombre de tâches
+  document.querySelector('#count').textContent = `Total tasks: ${count}`; // Affiche le nombre total de tâches
 }
